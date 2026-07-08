@@ -1,7 +1,7 @@
 ## Screenshots
 
 ### Login
-![Login](screenshots/login-sign in.png)
+![Login](screenshots/login-sign.png)
 
 ### Dashboard
 ![Dashboard](screenshots/dashboard.png)
