@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>CyberShieldX Firebase SMS OTP</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <style>
+    body {
+      margin: 0;
+      font-family: Segoe UI, Arial, sans-serif;
+      background: #0b1220;
+      color: #e8eefc;
+      padding: 20px;
+    }
+    .box {
+      max-width: 520px;
+      margin: 0 auto;
+      background: rgba(255,255,255,0.04);
+      border: 1px solid rgba(255,255,255,0.08);
+      border-radius: 18px;
+      padding: 20px;
+    }
+    input, button {
+      width: 100%;
+      margin-top: 12px;
+      padding: 12px;
+      border-radius: 10px;
+      border: none;
+      font-size: 15px;
+    }
+    input {
+      background: #111b2d;
+      color: white;
+    }
+    button {
+      background: #0ea5e9;
+      color: white;
+      cursor: pointer;
+      font-weight: 700;
+    }
+    .muted {
+      color: #9fb1d9;
+      font-size: 14px;
+      margin-top: 10px;
+    }
+    .status {
+      margin-top: 14px;
+      padding: 10px 12px;
+      border-radius: 10px;
+      background: rgba(255,255,255,0.05);
+      word-break: break-word;
+    }
+  </style>
+</head>
+<body>
+  <div class="box">
+    <h2>Firebase SMS OTP</h2>
+    <div class="muted">Enter a phone number in international format, then verify the OTP.</div>
+
+    <input id="phoneNumber" type="text" placeholder="+9627XXXXXXXX" />
+    <div id="recaptcha-container" style="margin-top: 12px;"></div>
+    <button id="sendOtpBtn">Send SMS OTP</button>
+
+    <input id="otpCode" type="text" placeholder="Enter OTP code" />
+    <button id="verifyOtpBtn">Verify OTP</button>
+
+    <div class="status" id="statusBox">Ready.</div>
+  </div>
+
+  <script type="module">
+    import { initializeApp } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-app.js";
+    import {
+      getAuth,
+      RecaptchaVerifier,
+      signInWithPhoneNumber
+    } from "https://www.gstatic.com/firebasejs/11.10.0/firebase-auth.js";
+
+    const firebaseConfig = {
+      apiKey: "YOUR_API_KEY",
+      authDomain: "YOUR_PROJECT.firebaseapp.com",
+      projectId: "YOUR_PROJECT_ID",
+      storageBucket: "YOUR_PROJECT.appspot.com",
+      messagingSenderId: "YOUR_MESSAGING_SENDER_ID",
+      appId: "YOUR_APP_ID"
+    };
+
+    const app = initializeApp(firebaseConfig);
+    const auth = getAuth(app);
+
+    const statusBox = document.getElementById("statusBox");
+    const sendOtpBtn = document.getElementById("sendOtpBtn");
+    const verifyOtpBtn = document.getElementById("verifyOtpBtn");
+
+    let confirmationResultRef = null;
+    let recaptchaVerifierRef = null;
+
+    function setStatus(msg) {
+      statusBox.textContent = msg;
+    }
+
+    function initRecaptcha() {
+      if (!recaptchaVerifierRef) {
+        recaptchaVerifierRef = new RecaptchaVerifier(auth, "recaptcha-container", {
+          size: "normal"
+        });
+        recaptchaVerifierRef.render();
+      }
+    }
+
+    initRecaptcha();
+
+    sendOtpBtn.addEventListener("click", async () => {
+      const phoneNumber = document.getElementById("phoneNumber").value.trim();
+
+      if (!phoneNumber) {
+        setStatus("Please enter a valid phone number.");
+        return;
+      }
+
+      try {
+        setStatus("Sending OTP...");
+        confirmationResultRef = await signInWithPhoneNumber(auth, phoneNumber, recaptchaVerifierRef);
+        setStatus("OTP sent successfully via Firebase SMS.");
+      } catch (error) {
+        setStatus("Failed to send OTP: " + error.message);
+      }
+    });
+
+    verifyOtpBtn.addEventListener("click", async () => {
+      const otpCode = document.getElementById("otpCode").value.trim();
+
+      if (!confirmationResultRef) {
+        setStatus("Please send OTP first.");
+        return;
+      }
+
+      if (!otpCode) {
+        setStatus("Please enter the OTP code.");
+        return;
+      }
+
+      try {
+        setStatus("Verifying OTP...");
+        await confirmationResultRef.confirm(otpCode);
+        setStatus("OTP verified successfully.");
+
+        localStorage.setItem("cybershieldx_firebase_verified", "true");
+        localStorage.setItem("cybershieldx_firebase_verified_at", String(Date.now()));
+      } catch (error) {
+        setStatus("Verification failed: " + error.message);
+      }
+    });
+  </script>
+</body>
+</html>

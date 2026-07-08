@@ -1,0 +1,42 @@
+services:
+  dashboard:
+    build: .
+    container_name: cybershieldx_dashboard
+    restart: always
+    ports:
+      - "8501:8501"
+    env_file:
+      - .env
+    environment:
+      - PYTHONPATH=/app
+    volumes:
+      - ./outputs:/app/outputs
+      - ./data:/app/data
+
+  telegram_listener:
+    build: .
+    container_name: cybershieldx_telegram_listener
+    restart: always
+    command: python -m src.telegram_listener
+    env_file:
+      - .env
+    volumes:
+      - ./outputs:/app/outputs
+      - ./data:/app/data
+      - ./cybershieldx_session.session:/app/cybershieldx_session.session
+
+  postgres:
+    image: postgres:16
+    container_name: cybershieldx_postgres
+    restart: always
+    environment:
+      POSTGRES_DB: cybershieldx
+      POSTGRES_USER: cybershieldx
+      POSTGRES_PASSWORD: cybershieldx_password
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+volumes:
+  pgdata:
