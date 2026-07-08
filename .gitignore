@@ -12,3 +12,5 @@ reports/
 .DS_Store
 Thumbs.db
 data/
+__pycache__/
+*.pyc
