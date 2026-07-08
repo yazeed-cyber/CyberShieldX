@@ -1,35 +1,42 @@
-# CyberShieldX
+## Screenshots
 
-AI-powered Arabic cyber threat detection platform.
+### Login
+![Login](screenshots/login-sign in.png)
 
-## Features
-- Arabic NLP threat detection
-- Rule-Based detection
-- Hybrid AI engine
-- Telegram monitoring
-- SOC dashboard
-- OTP authentication
-- PDF report generation
+### Dashboard
+![Dashboard](screenshots/dashboard.png)
 
-## Technologies
-- Python
-- Streamlit
-- Telethon
-- Pandas
-- Plotly
+### SOC Dashboard
+![SOC Dashboard](screenshots/soc1.png)
 
-## Run
+### Incident Center
+![Incident Center](screenshots/incident-center.png)
 
-```bash
-cd CyberShieldX
-python -m venv venv
-source venv/bin/activate
-pip install -r requirements.txt
-python -m streamlit run src/dashboard/dashboard_app.py
-OR
-python -m streamlit run src/dashboard/dashboard_app.py --server.port=8501
-OR
-python -m streamlit run src/dashboard/dashboard_app.py --server.port=8502
-OR
-PYTHONPATH=. streamlit run src/dashboard/dashboard_app.py
+### Risk Heatmap
+![Risk Heatmap](screenshots/heatmap.png)
+
+### Report Generator
+![Report Generator](screenshots/report.png)
+
+### Alert
+![Alert](screenshots/alert.png)
+
+### chanel verification
+![chanel verification](screenshots/chanel.png)
+
+### Hybrid AI
+![Hybrid AI](screenshots/hybrid-AI.png)
+
+### Jordanian Law
+![Jordanian Law](screenshots/law.png)
+
+### Live incident
+![Live Incident](screenshots/live-incident.png)
+
+### Real User
+![Real User](screenshots/real-user.png)
+
+### Red Team
+![Red Team](screenshots/red-team.png)
+
 
